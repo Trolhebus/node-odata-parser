@@ -433,10 +433,4 @@ describe('odata.parser grammar', function () {
         assert.equal(ast.$filter.left.name, "nav_property/first name");
 
     });
-
-    // it('xxxxx', function () {
-    //     var ast = parser.parse("$top=2&$filter=Date gt datetime'2012-09-27T21:12:59'");
-
-    //     console.log(JSON.stringify(ast, 0, 2));
-    // });
 });

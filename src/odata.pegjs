@@ -373,6 +373,7 @@ op                          =
                                 "sub" /
                                 "mul" /
                                 "div" /
+                                "contains" /
                                 "mod"
 
 unsupported                 =   "$" er:.* { return { error: "unsupported method: " + er }; }
