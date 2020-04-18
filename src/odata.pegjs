@@ -58,22 +58,6 @@ primitiveLiteral            =   null /
                                 boolean /
                                 string
 
-/*
-literalArray                = "(" list:literalArrayList ")" { return list;}
-							  / "(" .* ")" { return {"error": 'invalid array list'}; }
-
-literalArrayList            = i:(WSP? id:primitiveLiteral {
-                                    return [id];
-                                })                                
-                              list:("," WSP? l:literalArrayList{return l;})? {
-                                    if (!list) list = [];
-                                    if (require('util').isArray(list[0])) {
-                                        list = list[0];
-                                    }
-                                    list.unshift(i);
-                                    return list;
-                                }
-*/
 literalArray                = "(" list:literalArrayList ")" { return list;}
 							  / "(" .* ")" { return {"error": 'invalid array list'}; }
 
