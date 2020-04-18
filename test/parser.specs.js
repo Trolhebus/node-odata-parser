@@ -113,6 +113,23 @@ describe('odata.parser grammar', function () {
 	assert.equal(ast.$filter.right.value, "Jef");
     });
     
+    it('should parse $filter is null', function(){
+        var ast = parser.parse("$filter=status is 'null'");
+        assert.equal(ast.$filter.right.value, 'null');
+        assert.equal(ast.$filter.type, 'is');
+    });
+
+    it('should parse $filter in array', function(){
+        var ast = parser.parse("$filter=status in (1,2)");
+        assert.equal(ast.$filter.type, 'in');
+        assert.equal(ast.$filter.right.type, 'literalArray');
+        assert.equal(JSON.stringify(ast.$filter.right.value), JSON.stringify([1,2]));
+        var ast = parser.parse("$filter=status in ('a','b','c')");
+        assert.equal(ast.$filter.type, 'in');
+        assert.equal(JSON.stringify(ast.$filter.right.value), 
+                     JSON.stringify(['a','b','c']));
+    });
+
     it('should parse $filter containing quote', function () {
 
       var ast = parser.parse("$filter=Name eq 'O''Neil'");

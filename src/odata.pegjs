@@ -58,6 +58,26 @@ primitiveLiteral            =   null /
                                 boolean /
                                 string
 
+/*
+literalArray                = "(" list:literalArrayList ")" { return list;}
+							  / "(" .* ")" { return {"error": 'invalid array list'}; }
+
+literalArrayList            = i:(WSP? id:primitiveLiteral {
+                                    return [id];
+                                })                                
+                              list:("," WSP? l:literalArrayList{return l;})? {
+                                    if (!list) list = [];
+                                    if (require('util').isArray(list[0])) {
+                                        list = list[0];
+                                    }
+                                    list.unshift(i);
+                                    return list;
+                                }
+*/
+literalArray                = "(" list:literalArrayList ")" { return list;}
+							  / "(" .* ")" { return {"error": 'invalid array list'}; }
+
+literalArrayList            = (a:primitiveLiteral ","? {return a;})* 
 
 null                        =   "null" ( "'" identifier "'" )?
                                 // The optional qualifiedTypeName is used to specify what type this null value should be considered.
@@ -274,8 +294,7 @@ filter                      =   "$filter=" list:filterExpr {
                                 }
                             /   "$filter=" .* { return {"error": 'invalid $filter parameter'}; }
 
-filterExpr                  = 
-                              left:("(" WSP? filter:filterExpr WSP? ")"{return filter}) right:( WSP type:("and"/"or") WSP value:filterExpr{
+filterExpr                  = left:("(" WSP? filter:filterExpr WSP? ")"{return filter}) right:( WSP type:("and"/"or") WSP value:filterExpr{
                                     return { type: type, value: value}
                               })? {
                                 return filterExprHelper(left, right);
@@ -356,6 +375,12 @@ part                        =   booleanFunc /
                                         value: l
                                     };
                                 } /
+                                a:literalArray {
+                                    return {
+                                        type: 'literalArray',
+                                        value: a
+                                    };
+                                } /
                                 (u:identifierPath {
                                     return {
                                         type: 'property', name: u
@@ -369,6 +394,8 @@ op                          =
                                 "le" /
                                 "gt" /
                                 "ge" /
+                                "is" /
+                                "in" /
                                 "add" /
                                 "sub" /
                                 "mul" /
