@@ -286,7 +286,22 @@ describe('odata.parser grammar', function () {
           assert.equal(ast.$filter.right.value, "test");
       });
     });
-
+    ['tolower', 'toupper', 'trim'].forEach(function (func) {
+        it('should parse ' + func + ' $filter', function () {
+            var ast = parser.parse("$filter=" + func + "(value) ne 'test'");
+  
+            assert.equal(ast.$filter.type, "ne");
+  
+            assert.equal(ast.$filter.left.type, "functioncall");
+            assert.equal(ast.$filter.left.func, func);
+            assert.equal(ast.$filter.left.args[0].type, "property");
+            assert.equal(ast.$filter.left.args[0].name, "value");
+  
+            assert.equal(ast.$filter.right.type, "literal");
+            assert.equal(ast.$filter.right.value, "test");
+        });
+      });
+  
     ['year', 'month', 'day', 'hour', 'minute', 'second'].forEach(function (func) {
       it('should parse ' + func + ' $filter', function () {
         var ast = parser.parse("$filter=" + func + "(value) gt 0");
