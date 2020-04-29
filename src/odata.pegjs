@@ -61,7 +61,7 @@ primitiveLiteral            =   null /
 literalArray                = "(" list:literalArrayList ")" { return list;}
 							  / "(" .* ")" { return {"error": 'invalid array list'}; }
 
-literalArrayList            = (a:primitiveLiteral ","? {return a;})* 
+literalArrayList            = (WSP? a:primitiveLiteral WSP?","? {return a;})* 
 
 null                        =   "null" ( "'" identifier "'" )?
                                 // The optional qualifiedTypeName is used to specify what type this null value should be considered.
